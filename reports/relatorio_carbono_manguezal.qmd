@@ -1,0 +1,47 @@
+---
+title: "Síntese de Carbono em Manguezais"
+author: "Equipe do Projeto"
+format:
+  html:
+    toc: true
+    number-sections: true
+    theme: cosmo
+---
+
+# Banco de Dados de Carbono em Manguezais
+
+Este documento é gerado automaticamente a partir das saídas calculadas no sistema de processamento de carbono.
+
+```{r setup, include=FALSE}
+library(readr)
+library(dplyr)
+library(knitr)
+```
+
+## Síntese de Estoques por Sítio
+
+Os valores reportados abaixo consolidam a média das parcelas para cada ecossistema (sítio), unindo compartimento arbóreo e edáfico.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+site_summary <- tryCatch(read_csv("../outputs/site_summary.csv", show_col_types = FALSE), error=function(e) NULL)
+
+if(!is.null(site_summary)) {
+  kable(site_summary, caption = "Estoque de Carbono por Sítio (Mg C ha⁻¹)", format = "markdown")
+} else {
+  cat("**Aviso:** As análises não foram completadas. Arquivos em `outputs/` estão faltando. Por favor, execute `R/run_pipeline.R`.")
+}
+```
+
+## Detalhamento de Estoques por Parcela
+
+Abaixo, apresentamos o desdobramento do estoque de carbono orgânico ao nível de parcelas, integrando o carbono da biomassa acima do solo (C_AGB) com o carbono orgânico do solo na faixa superficial (0-30 cm) (SOC_0_30).
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plot_summary <- tryCatch(read_csv("../outputs/plot_summary.csv", show_col_types = FALSE), error=function(e) NULL)
+
+if(!is.null(plot_summary)) {
+  kable(plot_summary, caption = "Estoque de Carbono detalhado por Parcela (Mg C ha⁻¹)", format = "markdown")
+} else {
+  cat("**Aviso:** Resultados de plot_summary.csv ausentes.")
+}
+```
