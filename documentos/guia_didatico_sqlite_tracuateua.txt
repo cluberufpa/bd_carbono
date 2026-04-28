@@ -1,0 +1,72 @@
+GUIA DIDÁTICO - BANCO SQLITE
+
+Arquivos principais:
+- tracuateua_ensino_pt.sqlite  -> abre direto no DB Browser for SQLite
+- tracuateua_ensino_pt.sql     -> script SQL para recriar o banco no DB Browser
+
+Tabelas:
+1. dados_brutos
+   Guarda exatamente os dados importados da planilha.
+
+2. parcelas
+   Guarda o código da parcela e as coordenadas.
+
+3. especies
+   Guarda a referência taxonômica padronizada.
+
+4. mapa_codigos_especies
+   Explica como os códigos brutos foram convertidos para códigos padronizados.
+
+5. condicoes_individuo
+   Padroniza observações como morto, caído e cortado.
+
+6. arvores
+   Tabela principal com um registro por indivíduo.
+
+7. medidas_fuste
+   Guarda os CAPs em formato longo, ideal para ensino e análise.
+
+Views:
+- vw_registros_padronizados
+- vw_medidas_fuste
+- vw_resumo_parcela
+- vw_resumo_especie
+- vw_material_didatico_perguntas
+
+Como abrir no DB Browser:
+1. Abrir o DB Browser for SQLite
+2. Clicar em "Open Database"
+3. Selecionar o arquivo tracuateua_ensino_pt.sqlite
+
+Como recriar com o .sql:
+1. Criar um novo banco vazio no DB Browser
+2. Abrir a aba "Execute SQL"
+3. Colar o conteúdo de tracuateua_ensino_pt.sql
+4. Executar
+
+Consultas:
+1. Ver todos os registros padronizados
+   SELECT * FROM vw_registros_padronizados LIMIT 20;
+
+2. Contar indivíduos por espécie
+   SELECT nome_cientifico, COUNT(*) AS n
+   FROM vw_registros_padronizados
+   GROUP BY nome_cientifico
+   ORDER BY n DESC;
+
+3. Altura média por parcela
+   SELECT parcela, ROUND(AVG(altura_m), 2) AS altura_media_m
+   FROM vw_registros_padronizados
+   GROUP BY parcela
+   ORDER BY parcela;
+
+4. Listar CAPs em formato longo
+   SELECT * FROM vw_medidas_fuste
+   ORDER BY parcela, id_arvore, numero_fuste;
+
+5. Filtrar árvores mortas
+   SELECT * FROM vw_registros_padronizados
+   WHERE condicao_padronizada = 'morto';
+
+Observação de padronização:
+- O código bruto LG foi convertido para LR = Laguncularia racemosa com confiança média.
